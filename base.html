@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="{{ 'te' if language == 'te' else 'en' }}">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ t.brand }}{% endblock %} | {{ t.brand_tagline }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.468.0/font/lucide.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+<header class="site-header"><div class="shell nav-wrap">
+  <a class="brand" href="{{ url_for('home') }}"><span class="brand-mark"><i class="icon-droplets"></i></span><span><strong>{{ t.brand }}</strong><small>{{ t.brand_tagline }}</small></span></a>
+  <button class="menu-toggle" data-menu-toggle aria-label="{{ t.home }}"><i class="icon-menu"></i></button>
+  <nav data-menu>
+    <a href="{{ url_for('home') }}">{{ t.home }}</a><a href="{{ url_for('water_status') }}">{{ t.water_status }}</a><a href="{{ url_for('facilities') }}">{{ t.facilities }}</a><a href="{{ url_for('survey') }}">{{ t.community_survey }}</a><a href="{{ url_for('track_report') }}">{{ t.track_report }}</a>
+    <a class="nav-report" href="{{ url_for('report_problem') }}"><i class="icon-plus"></i> {{ t.report_problem }}</a>
+    {% if logged_in %}<a href="{{ url_for('admin_dashboard') }}">{{ t.admin }}</a><a href="{{ url_for('logout') }}">{{ t.sign_out }}</a>{% else %}<a href="{{ url_for('login') }}">{{ t.sign_in }}</a>{% endif %}
+  </nav>
+  <div class="language-switcher" aria-label="{{ t.language }}"><a class="{{ 'active' if language == 'en' else '' }}" href="{{ url_for('set_language', language='en') }}">EN</a><a class="{{ 'active' if language == 'te' else '' }}" href="{{ url_for('set_language', language='te') }}">తె</a></div>
+</div></header>
+<main>{% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}<div class="shell flash-stack">{% for category, message in messages %}<div class="flash {{ category }}" role="alert"><i class="icon-{{ 'check-circle-2' if category == 'success' else 'circle-alert' }}"></i>{{ message }}</div>{% endfor %}</div>{% endif %}{% endwith %}{% block content %}{% endblock %}</main>
+<footer><div class="shell footer-grid"><div><a class="brand footer-brand" href="{{ url_for('home') }}"><span class="brand-mark"><i class="icon-droplets"></i></span><strong>{{ t.brand }}</strong></a><p>{{ t.footer_copy }}</p></div><div><h3>{{ t.quick_links }}</h3><a href="{{ url_for('water_status') }}">{{ t.water_status }}</a><a href="{{ url_for('report_problem') }}">{{ t.report_problem }}</a><a href="{{ url_for('track_report') }}">{{ t.track_report }}</a></div><div><h3>{{ t.help }}</h3><p class="footer-note">{{ t.project_kicker }}<br>{{ t.copyright }}</p><div class="footer-language">{{ t.language }}: <a href="{{ url_for('set_language', language='en') }}">English</a> / <a href="{{ url_for('set_language', language='te') }}">తెలుగు</a></div></div></div></footer>
+<script>window.jalaTranslations = {{ t|tojson }};</script><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script><script src="{{ url_for('static', filename='js/main.js') }}"></script>{% block scripts %}{% endblock %}
+</body></html>
